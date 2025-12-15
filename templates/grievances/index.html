@@ -1,0 +1,96 @@
+<!-- templates/grievances/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCRAS - Smart Campus Reporting System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom,#2A486B 0%,#142337 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .hero-card {
+            background: rgba(217, 223, 220, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+        }
+        .btn-custom {
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .btn-primary-custom {
+            background: linear-gradient(to bottom,#2A486B 0%,#142337 100%);
+            border: none;
+            color: white;
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary-custom {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        h1 {
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            color: #718096;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="hero-card text-center">
+                    <div class="icon">🎓</div>
+                    <h1>Smart Campus Reporting & Assistance System</h1>
+                    <p class="subtitle">Your voice matters. Report issues anonymously and get instant guidance.</p>
+                    
+                    <div class="d-grid gap-3 col-md-8 mx-auto mt-5">
+                        <a href="{% url 'grievances:report' %}" class="btn btn-custom btn-primary-custom">
+                            📝 Submit an Issue
+                        </a>
+                        <a href="{% url 'grievances:admin_dashboard' %}" class="btn btn-custom btn-secondary-custom">
+                            🔐 Admin Dashboard
+                        </a>
+                    </div>
+                    
+                    <div class="mt-5 text-muted">
+                        <small>Safe • Confidential • Anonymous Option Available</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
