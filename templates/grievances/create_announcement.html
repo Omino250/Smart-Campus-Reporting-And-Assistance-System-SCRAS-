@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Announcement - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'grievances:announcements_list' %}" style="color: var(--gradient-start);">Announcements</a>
+                    </li>
+                    <li class="breadcrumb-item active">Post New</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="bi bi-megaphone"></i> Post New Announcement</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Title -->
+                        <div class="mb-4">
+                            <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-type-h1"></i> Title <span class="text-danger">*</span>
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <!-- Target Audience -->
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.target_audience.id_for_label }}" class="form-label fw-bold">
+                                    <i class="bi bi-people"></i> Target Audience
+                                </label>
+                                {{ form.target_audience }}
+                                {% if form.target_audience.errors %}
+                                    <div class="text-danger small mt-1">{{ form.target_audience.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.category.id_for_label }}" class="form-label fw-bold">
+                                    <i class="bi bi-tag"></i> Category
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-4">
+                            <label for="{{ form.content.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-card-text"></i> Content <span class="text-danger">*</span>
+                            </label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="text-danger small mt-1">{{ form.content.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Expiry Date -->
+                        <div class="mb-4">
+                            <label for="{{ form.expiry_date.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-calendar-x"></i> Expiry Date (Optional)
+                            </label>
+                            {{ form.expiry_date }}
+                            <small class="form-text" style="color: var(--text-secondary);">
+                                Leave blank for no expiry. After this date, the announcement will be hidden.
+                            </small>
+                            {% if form.expiry_date.errors %}
+                                <div class="text-danger small mt-1">{{ form.expiry_date.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Preview Box -->
+                        <div class="alert border-0 mb-4" style="background: var(--bg-secondary);">
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <i class="bi bi-eye text-primary"></i>
+                                <strong>Preview</strong>
+                            </div>
+                            <div id="previewTitle" class="fw-bold mb-1" style="color: var(--text-secondary);">
+                                Title will appear here...
+                            </div>
+                            <div id="previewContent" class="small" style="color: var(--text-secondary);">
+                                Content will appear here...
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-gradient flex-grow-1">
+                                <i class="bi bi-send"></i> Post Announcement
+                            </button>
+                            <a href="{% url 'grievances:announcements_list' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const titleInput = document.getElementById('id_title');
+    const contentInput = document.getElementById('id_content');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewContent = document.getElementById('previewContent');
+
+    function updatePreview() {
+        previewTitle.textContent = titleInput.value || 'Title will appear here...';
+        const text = contentInput.value;
+        previewContent.textContent = text.length > 150 ? text.substring(0, 150) + '...' : (text || 'Content will appear here...');
+    }
+
+    if (titleInput) titleInput.addEventListener('input', updatePreview);
+    if (contentInput) contentInput.addEventListener('input', updatePreview);
+});
+</script>
+{% endblock %}

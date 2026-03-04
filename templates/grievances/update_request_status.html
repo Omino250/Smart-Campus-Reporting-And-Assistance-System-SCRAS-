@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Request #{{ request.request_id }} - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'grievances:staff_dashboard' %}" style="color: var(--gradient-start);">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'grievances:staff_requests_list' %}" style="color: var(--gradient-start);">Requests</a>
+            </li>
+            <li class="breadcrumb-item active">Update #{{ request.request_id }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Update Form -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Update Request Status</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" id="statusForm">
+                        {% csrf_token %}
+
+                        <!-- Status Selector (Visual Cards) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-toggle-on"></i> New Status <span class="text-danger">*</span>
+                            </label>
+                            <div class="row g-3" id="statusCards">
+                                <div class="col-6 col-md-3">
+                                    <label class="status-card w-100" for="status_pending">
+                                        <input type="radio" name="status" value="pending" id="status_pending"
+                                               class="d-none status-radio"
+                                               {% if request.status == 'pending' %}checked{% endif %}>
+                                        <div class="card border-2 text-center p-3 h-100 status-option" data-status="pending">
+                                            <i class="bi bi-clock-history fs-2 mb-2 text-warning"></i>
+                                            <div class="fw-bold small">Pending</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="status-card w-100" for="status_in_progress">
+                                        <input type="radio" name="status" value="in_progress" id="status_in_progress"
+                                               class="d-none status-radio"
+                                               {% if request.status == 'in_progress' %}checked{% endif %}>
+                                        <div class="card border-2 text-center p-3 h-100 status-option" data-status="in_progress">
+                                            <i class="bi bi-arrow-repeat fs-2 mb-2 text-info"></i>
+                                            <div class="fw-bold small">In Progress</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="status-card w-100" for="status_resolved">
+                                        <input type="radio" name="status" value="resolved" id="status_resolved"
+                                               class="d-none status-radio"
+                                               {% if request.status == 'resolved' %}checked{% endif %}>
+                                        <div class="card border-2 text-center p-3 h-100 status-option" data-status="resolved">
+                                            <i class="bi bi-check-circle fs-2 mb-2 text-success"></i>
+                                            <div class="fw-bold small">Resolved</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="status-card w-100" for="status_rejected">
+                                        <input type="radio" name="status" value="rejected" id="status_rejected"
+                                               class="d-none status-radio"
+                                               {% if request.status == 'rejected' %}checked{% endif %}>
+                                        <div class="card border-2 text-center p-3 h-100 status-option" data-status="rejected">
+                                            <i class="bi bi-x-circle fs-2 mb-2 text-danger"></i>
+                                            <div class="fw-bold small">Rejected</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Hidden select for Django form -->
+                            <div class="d-none">{{ form.status }}</div>
+                        </div>
+
+                        <!-- Resolution Notes (shown for resolved) -->
+                        <div class="mb-4 field-resolved" style="display: none;">
+                            <label for="{{ form.resolution_notes.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-check2-all text-success"></i> Resolution Notes
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.resolution_notes }}
+                            <small class="form-text" style="color: var(--text-secondary);">
+                                Describe how the issue was resolved. This will be visible to the student.
+                            </small>
+                        </div>
+
+                        <!-- Rejection Reason (shown for rejected) -->
+                        <div class="mb-4 field-rejected" style="display: none;">
+                            <label for="{{ form.rejection_reason.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-x-octagon text-danger"></i> Rejection Reason
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.rejection_reason }}
+                            <small class="form-text" style="color: var(--text-secondary);">
+                                Explain why this request cannot be processed.
+                            </small>
+                        </div>
+
+                        <!-- In Progress Note -->
+                        <div class="mb-4 field-in_progress" style="display: none;">
+                            <div class="alert alert-info border-0">
+                                <i class="bi bi-arrow-repeat me-2"></i>
+                                Marking as <strong>In Progress</strong> notifies the student that their request is being reviewed.
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-gradient flex-grow-1" id="submitBtn">
+                                <i class="bi bi-check-lg"></i> <span id="submitBtnText">Update Status</span>
+                            </button>
+                            <a href="{% url 'grievances:request_detail' request.request_id %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request Summary Sidebar -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                    <h6 class="fw-bold"><i class="bi bi-file-earmark-text"></i> Request Summary</h6>
+                </div>
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">{{ request.subject }}</h6>
+
+                    <div class="mb-3 small" style="color: var(--text-secondary);">
+                        {{ request.description|truncatewords:30 }}
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                            {{ request.get_request_type_display }}
+                        </span>
+                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2">
+                            {{ request.get_priority_display }} Priority
+                        </span>
+                        <span class="badge badge-status badge-{{ request.status }} px-3 py-2">
+                            Current: {{ request.get_status_display }}
+                        </span>
+                    </div>
+
+                    <div class="small" style="color: var(--text-secondary);">
+                        <i class="bi bi-calendar me-1"></i> Submitted {{ request.submitted_at|timesince }} ago
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Contact -->
+            {% if not request.is_anonymous %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0">
+                    <h6 class="fw-bold"><i class="bi bi-person-lines-fill"></i> Student Contact</h6>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2"><i class="bi bi-person text-primary me-2"></i> {{ request.student_name }}</li>
+                        <li class="mb-2"><i class="bi bi-hash text-primary me-2"></i> {{ request.admission_number }}</li>
+                        <li class="mb-2">
+                            <i class="bi bi-envelope text-primary me-2"></i>
+                            <a href="mailto:{{ request.email }}" style="color: var(--gradient-start);">{{ request.email }}</a>
+                        </li>
+                        <li><i class="bi bi-phone text-primary me-2"></i> {{ request.phone_number }}</li>
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center py-3" style="color: var(--text-secondary);">
+                    <i class="bi bi-incognito fs-3"></i>
+                    <p class="mt-2 mb-0 small">Anonymous submission</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.status-option {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg-card);
+    border-color: var(--border-color) !important;
+}
+.status-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.status-option.selected-pending   { border-color: #f59e0b !important; background: #fef3c7; }
+.status-option.selected-in_progress { border-color: #3b82f6 !important; background: #dbeafe; }
+.status-option.selected-resolved  { border-color: #10b981 !important; background: #d1fae5; }
+.status-option.selected-rejected  { border-color: #ef4444 !important; background: #fee2e2; }
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-in_progress { background: #dbeafe; color: #1e40af; }
+.badge-resolved { background: #d1fae5; color: #065f46; }
+.badge-rejected { background: #fee2e2; color: #991b1b; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('.status-radio');
+    const options = document.querySelectorAll('.status-option');
+    const djangoSelect = document.querySelector('[name="status"]');
+    const submitBtnText = document.getElementById('submitBtnText');
+
+    function updateUI(value) {
+        // Reset all
+        options.forEach(o => o.className = 'card border-2 text-center p-3 h-100 status-option');
+        // Highlight selected
+        const selected = document.querySelector(`.status-option[data-status="${value}"]`);
+        if (selected) selected.classList.add(`selected-${value}`);
+
+        // Show/hide fields
+        document.querySelectorAll('.field-resolved, .field-rejected, .field-in_progress')
+                .forEach(el => el.style.display = 'none');
+        const field = document.querySelector(`.field-${value}`);
+        if (field) field.style.display = 'block';
+
+        // Update Django select
+        if (djangoSelect) djangoSelect.value = value;
+
+        // Update button text
+        const labels = { pending: 'Set as Pending', in_progress: 'Mark In Progress', resolved: 'Mark Resolved', rejected: 'Reject Request' };
+        submitBtnText.textContent = labels[value] || 'Update Status';
+    }
+
+    // Handle radio clicks
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => updateUI(radio.value));
+    });
+
+    // Also handle clicking on the card itself
+    options.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const status = opt.dataset.status;
+            const radio = document.getElementById(`status_${status}`);
+            if (radio) { radio.checked = true; updateUI(status); }
+        });
+    });
+
+    // Init with current status
+    const checked = document.querySelector('.status-radio:checked');
+    if (checked) updateUI(checked.value);
+});
+</script>
+{% endblock %}

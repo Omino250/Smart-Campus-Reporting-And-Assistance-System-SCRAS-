@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">Staff Dashboard 🛠️</h2>
+            <p style="color: var(--text-secondary);">Welcome, {{ user.full_name }}. Here's your workload overview.</p>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 fade-in h-100">
+                <div class="card-body d-flex align-items-center gap-4">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 70px; height: 70px; flex-shrink: 0;">
+                        <i class="bi bi-clock-history fs-2 text-warning"></i>
+                    </div>
+                    <div>
+                        <h6 style="color: var(--text-secondary);" class="mb-1">Pending</h6>
+                        <h2 class="fw-bold mb-0">{{ pending_count }}</h2>
+                        <small style="color: var(--text-secondary);">Awaiting action</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 fade-in h-100">
+                <div class="card-body d-flex align-items-center gap-4">
+                    <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 70px; height: 70px; flex-shrink: 0;">
+                        <i class="bi bi-arrow-repeat fs-2 text-info"></i>
+                    </div>
+                    <div>
+                        <h6 style="color: var(--text-secondary);" class="mb-1">In Progress</h6>
+                        <h2 class="fw-bold mb-0">{{ in_progress_count }}</h2>
+                        <small style="color: var(--text-secondary);">Being handled</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 fade-in h-100">
+                <div class="card-body d-flex align-items-center gap-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 70px; height: 70px; flex-shrink: 0;">
+                        <i class="bi bi-inbox fs-2 text-success"></i>
+                    </div>
+                    <div>
+                        <h6 style="color: var(--text-secondary);" class="mb-1">Total Assigned</h6>
+                        <h2 class="fw-bold mb-0">{{ total_assigned }}</h2>
+                        <small style="color: var(--text-secondary);">All time</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Pending Requests -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-clock text-warning"></i> My Pending Requests</h5>
+                    <a href="{% url 'grievances:staff_requests_list' %}?status=pending" class="btn btn-sm btn-outline-gradient">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    {% if pending_requests %}
+                        {% for req in pending_requests %}
+                        <div class="d-flex align-items-start gap-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}"
+                             style="border-color: var(--border-color) !important;">
+                            <div class="bg-warning bg-opacity-10 rounded p-2 flex-shrink-0">
+                                <i class="bi bi-clock text-warning"></i>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <a href="{% url 'grievances:request_detail' req.request_id %}"
+                                       class="fw-bold text-decoration-none" style="color: var(--text-primary);">
+                                        {{ req.subject|truncatewords:6 }}
+                                    </a>
+                                    <span class="badge ms-2 {% if req.priority == 'high' %}bg-danger{% elif req.priority == 'medium' %}bg-warning{% else %}bg-success{% endif %} flex-shrink-0">
+                                        {{ req.get_priority_display }}
+                                    </span>
+                                </div>
+                                <small style="color: var(--text-secondary);">
+                                    {{ req.get_request_type_display }} · {{ req.submitted_at|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4" style="color: var(--text-secondary);">
+                            <i class="bi bi-check-all fs-2"></i>
+                            <p class="mt-2 mb-0">No pending requests!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Unassigned Requests -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-inbox text-danger"></i> Unassigned Requests</h5>
+                    <a href="{% url 'grievances:staff_requests_list' %}?assignment=unassigned" class="btn btn-sm btn-outline-gradient">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    {% if unassigned_requests %}
+                        {% for req in unassigned_requests %}
+                        <div class="d-flex align-items-start gap-3 mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}"
+                             style="border-color: var(--border-color) !important;">
+                            <div class="bg-danger bg-opacity-10 rounded p-2 flex-shrink-0">
+                                <i class="bi bi-person-question text-danger"></i>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <a href="{% url 'grievances:request_detail' req.request_id %}"
+                                   class="fw-bold text-decoration-none d-block" style="color: var(--text-primary);">
+                                    {{ req.subject|truncatewords:6 }}
+                                </a>
+                                <small style="color: var(--text-secondary);">
+                                    {{ req.get_request_type_display }} · {{ req.submitted_at|timesince }} ago
+                                </small>
+                                <div class="mt-1">
+                                    <a href="{% url 'grievances:assign_request_to_self' req.request_id %}"
+                                       class="btn btn-sm btn-outline-gradient py-0 px-2">
+                                        <i class="bi bi-person-plus"></i> Take
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4" style="color: var(--text-secondary);">
+                            <i class="bi bi-inbox fs-2"></i>
+                            <p class="mt-2 mb-0">No unassigned requests</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row g-3 mt-2">
+        <div class="col-12">
+            <h6 class="fw-bold mb-3" style="color: var(--text-secondary);">QUICK ACTIONS</h6>
+        </div>
+        <div class="col-sm-4">
+            <a href="{% url 'grievances:staff_requests_list' %}" class="text-decoration-none">
+                <div class="card border-0 bg-gradient text-white">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-list-check fs-2 mb-1"></i>
+                        <div class="fw-bold small">All Requests</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-4">
+            <a href="{% url 'grievances:create_announcement' %}" class="text-decoration-none">
+                <div class="card border-0 text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-megaphone fs-2 mb-1"></i>
+                        <div class="fw-bold small">Post Announcement</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-4">
+            <a href="{% url 'grievances:announcements_list' %}" class="text-decoration-none">
+                <div class="card border-0 text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-bell fs-2 mb-1"></i>
+                        <div class="fw-bold small">Announcements</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

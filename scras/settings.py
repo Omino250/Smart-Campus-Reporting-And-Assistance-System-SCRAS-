@@ -129,3 +129,71 @@ STATIC_URL = 'static/'
 # Login settings
 LOGIN_URL = 'grievances:admin_login'
 LOGIN_REDIRECT_URL = 'grievances:admin_dashboard'
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Custom user model
+AUTH_USER_MODEL = 'grievances.User'
+
+# Email Configuration (for notifications)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' 
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'peteromino4@gmail.com' 
+EMAIL_HOST_PASSWORD = 'peteromino250'  
+DEFAULT_FROM_EMAIL = 'SCRAS <noreply@scras.edu>'
+
+# File Upload Settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ========================================
+# LOGIN SETTINGS
+# ========================================
+LOGIN_URL = 'grievances:user_login'
+LOGIN_REDIRECT_URL = 'grievances:home'
+LOGOUT_REDIRECT_URL = 'grievances:home'
+
+# ========================================
+# EMAIL CONFIGURATION
+# ========================================
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'  # TODO: Change this
+EMAIL_HOST_PASSWORD = 'your-app-password'  # TODO: Change this
+DEFAULT_FROM_EMAIL = 'SCRAS System <noreply@scras.maseno.ac.ke>'
+
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ========================================
+# MEDIA FILES (File Uploads)
+# ========================================
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ========================================
+# FILE UPLOAD SETTINGS
+# ========================================
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+
+# ========================================
+# SESSION CONFIGURATION
+# ========================================
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# ========================================
+# SECURITY SETTINGS (For production)
+# ========================================
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
