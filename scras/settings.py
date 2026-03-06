@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-sp*23=dxqqp4e417-)!e$#*qjrp00c8r0)vmh&up$-c-ke+*v1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['uniserve-xblj.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
