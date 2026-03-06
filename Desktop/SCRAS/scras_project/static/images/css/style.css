@@ -1,0 +1,32 @@
+/* ── DEFAULT: Dark Mode ── */
+:root {
+    --bg-color: #1a1d29;
+    --bg-secondary: #252836;
+    --card-bg: #2d3148;
+    --text-primary: #e9ecef;
+    --text-secondary: #a0a3b1;
+    --border-color: #3a3f5c;
+    --navbar-bg: #1a1d29;
+    --input-bg: #2d3148;
+    --input-text: #e9ecef;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    --gradient-start: #667eea;
+    --gradient-end: #764ba2;
+}
+
+/* ── OVERRIDE: Light Mode ── */
+[data-theme="light"] {
+    --bg-color: #f0f2f5;
+    --bg-secondary: #ffffff;
+    --card-bg: #ffffff;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+    --navbar-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-text: #212529;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --gradient-start: #667eea;
+    /* gradient stays the same */
+    --gradient-end: #764ba2;
+}

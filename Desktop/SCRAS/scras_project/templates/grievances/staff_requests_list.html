@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Requests - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h2 class="fw-bold"><i class="bi bi-inbox"></i>
+                {% if user.role == 'admin' %}All Requests{% else %}My Requests{% endif %}
+            </h2>
+            <p style="color: var(--text-secondary);">Manage and resolve student requests</p>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold" style="color: var(--text-secondary);">STATUS</label>
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                        <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold" style="color: var(--text-secondary);">ASSIGNMENT</label>
+                    <select name="assignment" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="all" {% if assignment_filter == 'all' %}selected{% endif %}>All</option>
+                        <option value="unassigned" {% if assignment_filter == 'unassigned' %}selected{% endif %}>Unassigned</option>
+                        <option value="assigned" {% if assignment_filter == 'assigned' %}selected{% endif %}>Assigned</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'grievances:staff_requests_list' %}" class="btn btn-sm btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Requests Table -->
+    {% if requests %}
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">#ID</th>
+                        <th>Subject</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Submitted</th>
+                        <th class="pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td class="ps-4 fw-bold">#{{ req.request_id }}</td>
+                        <td>
+                            <div class="fw-bold">{{ req.subject|truncatewords:5 }}</div>
+                            <small style="color: var(--text-secondary);">
+                                {% if req.is_anonymous %}
+                                    <i class="bi bi-incognito"></i> Anonymous
+                                {% else %}
+                                    {{ req.student_name|default:"—" }}
+                                {% endif %}
+                            </small>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                {{ req.get_request_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if req.priority == 'high' %}
+                                <span class="badge bg-danger"><i class="bi bi-arrow-up"></i> High</span>
+                            {% elif req.priority == 'medium' %}
+                                <span class="badge bg-warning text-dark">Medium</span>
+                            {% else %}
+                                <span class="badge bg-success">Low</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-status badge-{{ req.status }}">
+                                {{ req.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if req.assigned_staff %}
+                                <small>{{ req.assigned_staff.full_name }}</small>
+                            {% else %}
+                                <span class="text-muted small">Unassigned</span>
+                                {% if user.role == 'staff' %}
+                                <a href="{% url 'grievances:assign_request_to_self' req.request_id %}"
+                                   class="btn btn-xs btn-outline-gradient py-0 px-1 ms-1" style="font-size: 11px;">
+                                    Take
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small style="color: var(--text-secondary);">{{ req.submitted_at|date:"M d, Y" }}</small>
+                        </td>
+                        <td class="pe-4">
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'grievances:request_detail' req.request_id %}"
+                                   class="btn btn-sm btn-outline-gradient" title="View">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'grievances:update_request_status' req.request_id %}"
+                                   class="btn btn-sm btn-gradient" title="Update">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="card border-0">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-inbox fs-1" style="color: var(--text-secondary);"></i>
+            <h4 class="mt-3">No Requests Found</h4>
+            <p style="color: var(--text-secondary);">No requests match the current filters.</p>
+            <a href="{% url 'grievances:staff_requests_list' %}" class="btn btn-outline-gradient">Clear Filters</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-in_progress { background: #dbeafe; color: #1e40af; }
+.badge-resolved { background: #d1fae5; color: #065f46; }
+.badge-rejected { background: #fee2e2; color: #991b1b; }
+</style>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4 fade-in">
+        <div class="col-12">
+            <div class="card border-0 bg-gradient text-white">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-2">Welcome back, {{ user.full_name }}!</h2>
+                            <p class="mb-0 opacity-75">
+                                <i class="bi bi-calendar-check"></i> 
+                                {{ user.date_joined|date:"l, F d, Y" }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a href="{% url 'grievances:submit_request' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-plus-circle"></i> New Request
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4 fade-in">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Requests</p>
+                            <h2 class="fw-bold mb-0">{{ my_requests_count }}</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-inbox-fill fs-1 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 fade-in" style="animation-delay: 0.1s;">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Pending</p>
+                            <h2 class="fw-bold mb-0">{{ pending_count }}</h2>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-clock-fill fs-1 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 fade-in" style="animation-delay: 0.2s;">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Resolved</p>
+                            <h2 class="fw-bold mb-0">{{ resolved_count }}</h2>
+                        </div>
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-lightning-fill text-warning"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <a href="{% url 'grievances:submit_request' %}" class="btn btn-gradient text-start">
+                            <i class="bi bi-plus-circle"></i> Submit New Request
+                        </a>
+                        <a href="{% url 'grievances:my_requests' %}" class="btn btn-outline-gradient text-start">
+                            <i class="bi bi-list-check"></i> View My Requests
+                        </a>
+                        <a href="{% url 'grievances:announcements_list' %}" class="btn btn-outline-gradient text-start">
+                            <i class="bi bi-megaphone"></i> Campus Announcements
+                        </a>
+                        <a href="{% url 'grievances:submit_feedback' %}" class="btn btn-outline-gradient text-start">
+                            <i class="bi bi-star"></i> Give Feedback
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Announcements -->
+        <div class="col-lg-8">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-megaphone-fill text-info"></i> Recent Announcements
+                    </h5>
+                    <a href="{% url 'grievances:announcements_list' %}" class="btn btn-sm btn-outline-gradient">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_announcements %}
+                        <div class="list-group list-group-flush">
+                            {% for announcement in recent_announcements %}
+                                <a href="{% url 'grievances:announcement_detail' announcement.announcement_id %}" 
+                                   class="list-group-item list-group-item-action border-0" 
+                                   style="background-color: var(--bg-secondary); margin-bottom: 0.5rem; border-radius: 8px;">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1 fw-bold">{{ announcement.title }}</h6>
+                                        <small class="text-muted">{{ announcement.posted_at|timesince }} ago</small>
+                                    </div>
+                                    <p class="mb-1 small text-muted">{{ announcement.content|truncatewords:20 }}</p>
+                                    <small>
+                                        <span class="badge bg-info">{{ announcement.get_target_audience_display }}</span>
+                                        {% if announcement.category %}
+                                            <span class="badge" style="background-color: var(--bg-secondary); color: var(--text-primary);">
+                                                {{ announcement.category }}
+                                            </span>
+                                        {% endif %}
+                                    </small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted"></i>
+                            <p class="text-muted mt-2">No announcements yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

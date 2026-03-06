@@ -1,0 +1,14 @@
+# General Python
+__pycache__/
+*.py[cod]
+
+# Environments
+venv/
+env/
+
+# Database & Sensitive info
+.env
+db.sqlite3
+
+# OS specific
+.DS_Store

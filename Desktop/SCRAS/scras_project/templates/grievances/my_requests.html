@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}My Requests - SCRAS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'grievances:student_dashboard' %}" style="color: var(--gradient-start);">Dashboard</a></li>
+                <li class="breadcrumb-item active">My Requests</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-0">
+                    <i class="bi bi-list-check text-gradient"></i> My Requests
+                </h2>
+                <p class="text-muted mb-0">Track all your submitted requests</p>
+            </div>
+            <a href="{% url 'grievances:submit_request' %}" class="btn btn-gradient">
+                <i class="bi bi-plus-circle"></i> New Request
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-0">
+            <ul class="nav nav-pills p-3" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" 
+                       href="?status=all">
+                        All ({{ total_count }})
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if status_filter == 'pending' %}active{% endif %}" 
+                       href="?status=pending">
+                        <i class="bi bi-clock"></i> Pending
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if status_filter == 'in_progress' %}active{% endif %}" 
+                       href="?status=in_progress">
+                        <i class="bi bi-arrow-repeat"></i> In Progress
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if status_filter == 'resolved' %}active{% endif %}" 
+                       href="?status=resolved">
+                        <i class="bi bi-check-circle"></i> Resolved
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link {% if status_filter == 'rejected' %}active{% endif %}" 
+                       href="?status=rejected">
+                        <i class="bi bi-x-circle"></i> Rejected
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Requests List -->
+    {% if requests %}
+        <div class="row g-4">
+            {% for request in requests %}
+                <div class="col-12 fade-in">
+                    <div class="card border-0 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3">
+                                            <div class="bg-gradient text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                 style="width: 50px; height: 50px;">
+                                                <strong>#{{ request.request_id }}</strong>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="fw-bold mb-2">
+                                                <a href="{% url 'grievances:request_detail' request.request_id %}" 
+                                                   style="color: var(--text-primary); text-decoration: none;">
+                                                    {{ request.subject }}
+                                                </a>
+                                            </h5>
+                                            <p class="text-muted mb-2">{{ request.description|truncatewords:25 }}</p>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <span class="badge" style="background-color: var(--bg-secondary); color: var(--text-primary);">
+                                                    <i class="bi bi-tag"></i> {{ request.get_request_type_display }}
+                                                </span>
+                                                <span class="badge badge-status badge-{{ request.status }}">
+                                                    {{ request.get_status_display }}
+                                                </span>
+                                                {% if request.priority == 'high' %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="bi bi-exclamation-triangle"></i> High Priority
+                                                    </span>
+                                                {% endif %}
+                                                {% if request.is_anonymous %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="bi bi-incognito"></i> Anonymous
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                    <small class="text-muted d-block mb-2">
+                                        <i class="bi bi-clock"></i> {{ request.submitted_at|timesince }} ago
+                                    </small>
+                                    <a href="{% url 'grievances:request_detail' request.request_id %}" 
+                                       class="btn btn-outline-gradient btn-sm">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-inbox fs-1 text-muted mb-3"></i>
+                <h5 class="text-muted">No requests found</h5>
+                <p class="text-muted">You haven't submitted any requests yet.</p>
+                <a href="{% url 'grievances:submit_request' %}" class="btn btn-gradient">
+                    <i class="bi bi-plus-circle"></i> Submit Your First Request
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2) !important;
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
+{% endblock %}
