@@ -15,23 +15,23 @@ def generate_suggestion(request_type, description):
         'water', 'electricity', 'door', 'window', 'furniture'
     ]):
         return """
-        **Facilities Management Department**
+        Facilities Management Department
         
         Please report this maintenance issue to the Facilities Management Department.
         
-        **Contact Information:**
+        Contact Information:
         - Location: Administration Block, Ground Floor
         - Phone: +254-057-351622 Ext. 2045
         - Email: facilities@maseno.ac.ke
         - Emergency Hotline: +254-700-000-001 (24/7)
         
-        **Next Steps:**
+        Next Steps:
         1. Your request has been logged with ID for tracking
         2. Maintenance team will assess the issue within 24 hours
         3. Urgent repairs (water, electricity) prioritized immediately
         4. You will receive status updates via email/SMS
         
-        **Average Response Time:** 24-48 hours for standard repairs
+        Average Response Time: 24-48 hours for standard repairs
         """
     
     # ========================================
@@ -42,29 +42,29 @@ def generate_suggestion(request_type, description):
         'professor', 'unit', 'timetable', 'registration', 'transcript'
     ]):
         return """
-        **Academic Registrar's Office**
+        Academic Registrar's Office
         
         For academic-related issues, please consult the Academic Registrar's Office.
         
-        **Contact Information:**
+        Contact Information:
         - Location: Administration Block, 1st Floor
         - Phone: +254-057-351622 Ext. 2010
         - Email: registrar@maseno.ac.ke
         - Office Hours: Monday-Friday, 8:00 AM - 5:00 PM
         
-        **Services Available:**
+        Services Available:
         - Course registration issues
         - Grade appeals and corrections
         - Transcript requests
         - Academic calendar inquiries
         - Transfer and deferment applications
         
-        **You may also contact:**
+        You may also contact:
         - Your Department Head for course-specific issues
         - Academic Advisor for program guidance
         - Dean of Students for general academic support
         
-        **Processing Time:** 3-5 working days for most academic requests
+        Processing Time: 3-5 working days for most academic requests
         """
     
     # ========================================
@@ -75,24 +75,24 @@ def generate_suggestion(request_type, description):
         'violence', 'discriminat', 'intimidat'
     ]):
         return """
-        ⚠️ **URGENT: Report to Dean of Students Office Immediately**
+        ⚠️ URGENT: Report to Dean of Students Office Immediately
         
         This is a serious matter. Your safety and wellbeing are our top priority.
         
-        **IMMEDIATE ACTION REQUIRED:**
+        IMMEDIATE ACTION REQUIRED:
         
-        **Dean of Students Office:**
+        Dean of Students Office:
         - Location: Student Affairs Building, Room 105
         - Phone: +254-057-351622 Ext. 2030
         - Email: deanofstudents@maseno.ac.ke
         - Emergency: +254-700-000-002 (24/7 Security Hotline)
         
-        **Campus Security:**
+        Campus Security:
         - Main Gate Security Office
         - Emergency: +254-700-000-003
         - Available 24/7
         
-        **Additional Support:**
+        Additional Support:
         - University Counseling Center (confidential support)
         - Gender-Based Violence Response Unit
         - Legal Aid Clinic (for serious cases)
@@ -103,7 +103,7 @@ def generate_suggestion(request_type, description):
         - The university has zero tolerance for harassment
         - You will not face retaliation for reporting
         
-        **If you are in immediate danger, call Campus Security: +254-700-000-003**
+        If you are in immediate danger, call Campus Security: +254-700-000-003
         """
     
     # ========================================
@@ -114,35 +114,35 @@ def generate_suggestion(request_type, description):
         'loan', 'payment', 'bank', 'helb', 'funding'
     ]):
         return """
-        **Financial Aid Office**
+        Financial Aid Office
         
         For all financial and fees-related matters, please visit the Financial Aid Office.
         
-        **Contact Information:**
+        Contact Information:
         - Location: Administration Block, Ground Floor, Room 15
         - Phone: +254-057-351622 Ext. 2025
         - Email: finance@maseno.ac.ke
         - Office Hours: Monday-Friday, 8:00 AM - 4:00 PM
         
-        **Services Offered:**
+        Services Offered:
         - Fee payment plans and arrangements
         - Scholarship and bursary applications
         - HELB (Higher Education Loans Board) inquiries
         - Fee statements and receipts
         - Financial clearance for graduation
         
-        **Required Documents:**
+        Required Documents:
         - Student ID
         - Admission letter
         - Fee structure
         - Bank payment slips (if applicable)
         
-        **Payment Options:**
+        Payment Options:
         - Bank deposits (Account details at Finance Office)
         - M-PESA Paybill: 123456 (Account: Student ID)
         - Online portal: portal.maseno.ac.ke
         
-        **Processing Time:** Fee queries resolved within 2-3 working days
+        Processing Time: Fee queries resolved within 2-3 working days
         """
     
     # ========================================
@@ -198,18 +198,18 @@ def generate_suggestion(request_type, description):
         'email', 'login', 'system', 'software', 'printer', 'network'
     ]):
         return """
-        **ICT Department**
+        ICT Department
         
         For all IT and technical support issues, contact the ICT Department.
         
-        **Contact Information:**
+        Contact Information:
         - Location: ICT Center, Near Main Library
         - Phone: +254-057-351622 Ext. 2050
         - Email: ict@maseno.ac.ke
         - Help Desk: helpdesk@maseno.ac.ke
         - Office Hours: Monday-Friday, 8:00 AM - 5:00 PM
         
-        **Services Offered:**
+        Services Offered:
         - Student portal access and password resets
         - University email setup (@students.maseno.ac.ke)
         - WiFi connectivity issues
@@ -217,17 +217,17 @@ def generate_suggestion(request_type, description):
         - Online learning platform (Moodle) support
         - Software installation assistance
         
-        **Self-Service Options:**
+        Self-Service Options:
         - Password Reset: portal.maseno.ac.ke/reset
         - WiFi Setup Guide: ict.maseno.ac.ke/wifi-setup
         - Email Configuration: ict.maseno.ac.ke/email-help
         
-        **Common Solutions:**
+        Common Solutions:
         - Portal Login: Use Student ID as username
         - WiFi Network: Maseno-Student (Password: Your Student ID)
         - Browser Issues: Try clearing cache or use Chrome/Firefox
         
-        **Response Time:** Most issues resolved within 24 hours
+        Response Time: Most issues resolved within 24 hours
         """
     
     # ========================================
@@ -238,17 +238,17 @@ def generate_suggestion(request_type, description):
         'recommendation', 'verification', 'hostel', 'accommodation'
     ]):
         return """
-        **Student Affairs Office**
+        Student Affairs Office
         
         For administrative services and general student matters.
         
-        **Contact Information:**
+        Contact Information:
         - Location: Student Affairs Building
         - Phone: +254-057-351622 Ext. 2035
         - Email: studentaffairs@maseno.ac.ke
         - Office Hours: Monday-Friday, 8:00 AM - 5:00 PM
         
-        **Services Available:**
+        Services Available:
         - Student ID card issuance and replacement
         - Clearance letters
         - Introduction and recommendation letters
@@ -257,17 +257,17 @@ def generate_suggestion(request_type, description):
         - Student organization registration
         - Event approval and permits
         
-        **Required Documents:**
+        Required Documents:
         - Valid student ID (or admission letter)
         - Fee payment receipt
         - Passport photo (for ID cards)
         
-        **Processing Times:**
+        Processing Times:
         - ID Cards: 3-5 working days
         - Letters: 1-2 working days
         - Clearance: 2-3 working days
         
-        **Hostel Matters:**
+        Hostel Matters:
         - Housing Office: Same building, Room 20
         - Email: housing@maseno.ac.ke
         - Allocation, maintenance, and accommodation issues
@@ -277,32 +277,32 @@ def generate_suggestion(request_type, description):
     # DEFAULT/OTHER
     # ========================================
     return """
-    **Request Received and Under Review**
+    Request Received and Under Review
     
-    Thank you for submitting your request through SCRAS.
+    Thank you for submitting your request through UniServe.
     
-    **What Happens Next:**
+    What Happens Next:
     1. Your request has been logged and assigned a tracking ID
     2. It will be reviewed by the appropriate department within 48 hours
     3. You will receive updates via email and in-app notifications
     4. A staff member may contact you for additional information
     
-    **Track Your Request:**
+    Track Your Request:
     - View status updates in the "My Requests" section
     - You'll be notified of any status changes
     - Average resolution time: 3-5 working days
     
-    **Need Immediate Assistance?**
+    Need Immediate Assistance?
     
-    **Dean of Students Office:**
+    Dean of Students Office:
     - Phone: +254-057-351622 Ext. 2030
     - Email: deanofstudents@maseno.ac.ke
     
-    **Student Affairs:**
+    Student Affairs:
     - Phone: +254-057-351622 Ext. 2035
     - Email: studentaffairs@maseno.ac.ke
     
-    **Emergency Services:**
+    Emergency Services:
     - Campus Security: +254-700-000-003 (24/7)
     - Medical Emergency: +254-700-000-005 (24/7)
     

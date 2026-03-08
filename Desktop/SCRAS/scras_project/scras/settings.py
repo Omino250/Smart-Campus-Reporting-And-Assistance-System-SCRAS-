@@ -28,7 +28,11 @@ SECRET_KEY = 'django-insecure-sp*23=dxqqp4e417-)!e$#*qjrp00c8r0)vmh&up$-c-ke+*v1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['uniserve-xblj.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    os.environ.get('RENDER_EXTERNAL_HOSTNAME', ''),  # auto-set by Render
+]
 
 
 # Application definition
@@ -197,3 +201,22 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# settings.py
+
+
+# ========================================
+# EMAIL CONFIGURATION — Gmail SMTP
+# ========================================
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')       # your Gmail address
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') # Gmail App Password
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+
+# ========================================
+# PASSWORD RESET LINK EXPIRY
+# ========================================
+PASSWORD_RESET_TIMEOUT = 3600  # link expires in 1 hour (seconds)
